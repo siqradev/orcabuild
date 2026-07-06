@@ -1,0 +1,100 @@
+generator client {
+  provider   = "prisma-client"
+  output     = "../src/generated"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String   @db.VarChar(100)
+  role      UserRole @default(ENGINEER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt      @map("updated_at")
+  projects  Project[]
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  ENGINEER
+  CLIENT
+}
+
+model Project {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @db.VarChar(200)
+  description String?       @db.Text
+  location    String?       @db.VarChar(300)
+  status      ProjectStatus @default(DRAFT)
+  userId      String        @map("user_id") @db.Uuid
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt      @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  budgets     Budget[]
+  @@map("projects")
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Budget {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String       @db.VarChar(200)
+  description String?      @db.Text
+  status      BudgetStatus @default(DRAFT)
+  version     Int          @default(1)
+  totalCost   Decimal      @default(0) @map("total_cost") @db.Decimal(15, 2)
+  currency    String       @default("BRL") @db.VarChar(3)
+  projectId   String       @map("project_id") @db.Uuid
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt      @map("updated_at")
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items       BudgetItem[]
+  // Dados da empresa para cabeçalho do orçamento
+  companyName     String?  @map("company_name")     @db.VarChar(200)
+  companyCnpj     String?  @map("company_cnpj")     @db.VarChar(20)
+  companyAddress  String?  @map("company_address")  @db.VarChar(300)
+  companyPhone    String?  @map("company_phone")    @db.VarChar(30)
+  companyEmail    String?  @map("company_email")    @db.VarChar(150)
+  companyLogoUrl  String?  @map("company_logo_url") @db.Text
+  engineerName    String?  @map("engineer_name")    @db.VarChar(150)
+  engineerCrea    String?  @map("engineer_crea")    @db.VarChar(30)
+  @@map("budgets")
+}
+
+enum BudgetStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+model BudgetItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  description String   @db.VarChar(300)
+  unit        String   @db.VarChar(20)
+  quantity    Decimal  @db.Decimal(10, 3)
+  unitPrice   Decimal  @map("unit_price") @db.Decimal(15, 2)
+  totalPrice  Decimal  @map("total_price") @db.Decimal(15, 2)
+  meta        String?  @db.VarChar(150)
+  submeta     String?  @db.VarChar(150)
+  category    String?  @db.VarChar(100)
+  notes       String?  @db.Text
+  sortOrder   Int      @default(0) @map("sort_order")
+  budgetId    String   @map("budget_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt      @map("updated_at")
+  budget      Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  @@map("budget_items")
+}
