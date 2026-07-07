@@ -1,0 +1,27 @@
+# docker-compose.yml
+# Define os serviços que vamos rodar em containers
+
+version: '3.9'
+
+services:
+  # Nosso banco de dados PostgreSQL
+  postgres:
+    image: postgres:16-alpine       # Versão 16, Alpine = imagem menor
+    container_name: orcabuild-db    # Nome amigável para o container
+    restart: unless-stopped         # Reinicia automaticamente se travar
+    
+    environment:
+      POSTGRES_USER: orcabuild          # Usuário do banco
+      POSTGRES_PASSWORD: orcabuild123   # Senha (use algo mais seguro em produção!)
+      POSTGRES_DB: orcabuild            # Nome do banco que será criado
+    
+    ports:
+      - "5432:5432"    # Porta local:porta do container
+    
+    volumes:
+      # Persiste os dados mesmo se o container for removido
+      - pgdata:/var/lib/postgresql/data
+
+# Volume nomeado para persistência dos dados
+volumes:
+  pgdata:

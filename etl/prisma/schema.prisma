@@ -1,0 +1,275 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Tabela de preços (multi-fonte) ──────────────────────────────────────────
+
+model PriceTable {
+  id          String     @id @default(uuid())
+  source      Source
+  type        TableType?
+  state       String
+  month       Int?
+  year        Int?
+  version     String?
+  reference   String
+  description String?
+  isActive    Boolean    @default(true)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+
+  items      Item[]
+  importJobs ImportJob[]
+
+  // SINAPI, SICRO — identificados por month + year
+  @@unique([source, state, month, year, type], map: "PriceTable_sinapi_unique")
+  // SEINFRA, EMBASA — identificados por version
+  @@unique([source, state, version, type],     map: "PriceTable_seinfra_unique")
+  @@index([source])
+  @@index([state])
+  @@index([isActive])
+}
+
+// ─── Item (insumo ou composição) ─────────────────────────────────────────────
+
+model Item {
+  id           String   @id @default(uuid())
+  code         String
+  description  String
+  searchText   String?
+  unit         String
+  type         ItemType
+  category     String?
+  basePrice    Decimal? @db.Decimal(12, 4)
+  priceTableId String
+
+  // Autoria — apenas para itens originados de cotação/composição (source PROPRIA)
+  createdByUserId String?
+  createdByName   String?
+
+  // Parâmetros de precificação — apenas para composições próprias (type=COMPOSICAO, source=PROPRIA)
+  encargosSociais Decimal? @db.Decimal(6, 2)
+  bdi             Decimal? @db.Decimal(6, 2)
+
+  priceTable   PriceTable    @relation(fields: [priceTableId], references: [id])
+  compositions Composition[] @relation("ParentItem")
+  usedIn       Composition[] @relation("ChildItem")
+  budgetItems  BudgetItem[]
+  quotation    Quotation?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@unique([code, priceTableId])
+  @@index([code])
+  @@index([priceTableId])
+  @@index([searchText])
+  @@index([type])
+}
+
+// ─── Composição (relação pai → filho) ────────────────────────────────────────
+
+model Composition {
+  id           String  @id @default(uuid())
+  parentItemId String
+  childItemId  String
+  coefficient  Decimal @db.Decimal(12, 6)
+  unit         String?
+  category     CompositionCategory @default(MATERIAL)
+
+  parentItem Item @relation("ParentItem", fields: [parentItemId], references: [id], onDelete: Cascade)
+  childItem  Item @relation("ChildItem",  fields: [childItemId],  references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([parentItemId, childItemId])
+  @@index([parentItemId])
+  @@index([childItemId])
+}
+// ─── Import Job ───────────────────────────────────────────────────────────────
+
+model ImportJob {
+  id           String     @id @default(uuid())
+  source       Source
+  status       JobStatus
+  state        String
+  type         TableType?
+  month        Int?
+  year         Int?
+  version      String?
+  itemsCount   Int?
+  logs         String?
+  priceTableId String?
+  startedAt    DateTime   @default(now())
+  finishedAt   DateTime?
+
+  priceTable PriceTable? @relation(fields: [priceTableId], references: [id])
+
+  @@index([status])
+  @@index([source])
+}
+
+// ─── Autenticação ─────────────────────────────────────────────────────────────
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  keyPrefix String   @unique
+  hash      String
+  owner     String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([keyPrefix, active])
+}
+
+// ─── Usuário (Fase 5) ─────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  budgets Budget[]
+}
+
+// ─── Orçamento (Fase 5) ───────────────────────────────────────────────────────
+
+model Budget {
+  id          String       @id @default(uuid())
+  userId      String
+  name        String
+  description String?
+  client      String?
+  status      BudgetStatus @default(RASCUNHO)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+
+  user  User         @relation(fields: [userId], references: [id])
+  items BudgetItem[]
+}
+
+// ─── Item do Orçamento (Fase 5) ───────────────────────────────────────────────
+
+model BudgetItem {
+  id         String  @id @default(uuid())
+  budgetId   String
+  itemId     String
+  quantity   Decimal @db.Decimal(12, 4)
+  unitPrice  Decimal @db.Decimal(12, 4)
+  totalPrice Decimal @db.Decimal(12, 4)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  item   Item   @relation(fields: [itemId],   references: [id])
+
+  @@unique([budgetId, itemId])
+  @@index([budgetId, itemId])
+}
+// ─── Cotações ─────────────────────────────────────────────────────────────────
+
+model Quotation {
+  id              String          @id @default(uuid())
+  description     String
+  unit            String
+  status          QuotationStatus @default(PENDING)
+  createdByUserId String
+  createdByName   String
+  approvedQuoteId String?         @unique
+  approvedAt      DateTime?
+  expiresAt       DateTime?
+  resultItemId    String?         @unique
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  quotes        Quote[]
+  approvedQuote Quote? @relation("ApprovedQuote", fields: [approvedQuoteId], references: [id])
+  resultItem    Item?  @relation(fields: [resultItemId], references: [id])
+
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model Quote {
+  id           String       @id @default(uuid())
+  quotationId  String
+  supplierName String
+  unitPrice    Decimal      @db.Decimal(12, 4)
+  ipi          Decimal?     @db.Decimal(5, 2)
+  icms         Decimal?     @db.Decimal(5, 2)
+  freightType  FreightType?
+  notes        String?
+  createdAt    DateTime     @default(now())
+
+  quotation   Quotation  @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  approvedFor Quotation? @relation("ApprovedQuote")
+
+  @@index([quotationId])
+}
+
+enum QuotationStatus {
+  PENDING
+  OPEN
+  APPROVED
+  EXPIRED
+}
+
+enum FreightType {
+  FOB
+  CIF
+}
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Source {
+  SINAPI
+  SEINFRA
+  SICRO
+  EMBASA
+  CPOS
+  ORSE
+  PROPRIA
+}
+
+
+enum ItemType {
+  INSUMO
+  COMPOSICAO
+}
+
+enum TableType {
+  ONERADA
+  DESONERADA
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+enum BudgetStatus {
+  RASCUNHO
+  FINALIZADO
+  APROVADO
+}
+enum CompositionCategory {
+  MAO_DE_OBRA
+  MATERIAL
+  EQUIPAMENTO
+}
