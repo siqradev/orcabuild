@@ -54,7 +54,13 @@ export const ModelName = {
   User: 'User',
   Project: 'Project',
   Budget: 'Budget',
-  BudgetItem: 'BudgetItem'
+  BudgetItem: 'BudgetItem',
+  PurchaseRequest: 'PurchaseRequest',
+  PurchaseRequestItem: 'PurchaseRequestItem',
+  SupplierQuote: 'SupplierQuote',
+  SupplierQuoteItem: 'SupplierQuoteItem',
+  PurchaseOrder: 'PurchaseOrder',
+  PurchaseOrderItem: 'PurchaseOrderItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -142,6 +148,85 @@ export const BudgetItemScalarFieldEnum = {
 } as const
 
 export type BudgetItemScalarFieldEnum = (typeof BudgetItemScalarFieldEnum)[keyof typeof BudgetItemScalarFieldEnum]
+
+
+export const PurchaseRequestScalarFieldEnum = {
+  id: 'id',
+  budgetId: 'budgetId',
+  title: 'title',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PurchaseRequestScalarFieldEnum = (typeof PurchaseRequestScalarFieldEnum)[keyof typeof PurchaseRequestScalarFieldEnum]
+
+
+export const PurchaseRequestItemScalarFieldEnum = {
+  id: 'id',
+  purchaseRequestId: 'purchaseRequestId',
+  budgetItemId: 'budgetItemId',
+  description: 'description',
+  unit: 'unit',
+  quantityRequested: 'quantityRequested',
+  quantityOrdered: 'quantityOrdered',
+  budgetUnitPrice: 'budgetUnitPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type PurchaseRequestItemScalarFieldEnum = (typeof PurchaseRequestItemScalarFieldEnum)[keyof typeof PurchaseRequestItemScalarFieldEnum]
+
+
+export const SupplierQuoteScalarFieldEnum = {
+  id: 'id',
+  purchaseRequestId: 'purchaseRequestId',
+  supplierName: 'supplierName',
+  supplierContact: 'supplierContact',
+  validUntil: 'validUntil',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type SupplierQuoteScalarFieldEnum = (typeof SupplierQuoteScalarFieldEnum)[keyof typeof SupplierQuoteScalarFieldEnum]
+
+
+export const SupplierQuoteItemScalarFieldEnum = {
+  id: 'id',
+  supplierQuoteId: 'supplierQuoteId',
+  purchaseRequestItemId: 'purchaseRequestItemId',
+  unitPrice: 'unitPrice',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type SupplierQuoteItemScalarFieldEnum = (typeof SupplierQuoteItemScalarFieldEnum)[keyof typeof SupplierQuoteItemScalarFieldEnum]
+
+
+export const PurchaseOrderScalarFieldEnum = {
+  id: 'id',
+  purchaseRequestId: 'purchaseRequestId',
+  supplierQuoteId: 'supplierQuoteId',
+  supplierName: 'supplierName',
+  totalAmount: 'totalAmount',
+  status: 'status',
+  issuedAt: 'issuedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PurchaseOrderScalarFieldEnum = (typeof PurchaseOrderScalarFieldEnum)[keyof typeof PurchaseOrderScalarFieldEnum]
+
+
+export const PurchaseOrderItemScalarFieldEnum = {
+  id: 'id',
+  purchaseOrderId: 'purchaseOrderId',
+  purchaseRequestItemId: 'purchaseRequestItemId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice'
+} as const
+
+export type PurchaseOrderItemScalarFieldEnum = (typeof PurchaseOrderItemScalarFieldEnum)[keyof typeof PurchaseOrderItemScalarFieldEnum]
 
 
 export const SortOrder = {

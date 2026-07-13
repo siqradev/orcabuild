@@ -13,6 +13,7 @@ import sinapiRoutes      from "./modules/sinapi/sinapi.routes.js";
 import priceTablesRoutes from "./modules/price-tables/price-tables.routes.js"; // ← NOVO
 import quotationsRoutes  from "./modules/quotations/quotations.routes.js";     // ← NOVO
 import compositionsRoutes from "./modules/compositions/compositions.routes.js"; // ← NOVO
+import purchaseRequestsRoutes from "./modules/purchase-requests/purchase-requests.routes.js";
 
 
 export function createApp() {
@@ -42,7 +43,7 @@ export function createApp() {
   app.use("/price-tables",                      priceTablesRoutes); // ← NOVO
   app.use("/quotations",                        quotationsRoutes);  // ← NOVO
   app.use("/compositions",                     compositionsRoutes); // ← NOVO
-
+  app.use("/purchase-requests", purchaseRequestsRoutes);
   
   app.get("/", (_req, res) => res.json({ status: "ok", version: "1.0.0" }));
   app.use(notFound);

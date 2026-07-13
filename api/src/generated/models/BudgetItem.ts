@@ -301,6 +301,7 @@ export type BudgetItemWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"BudgetItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BudgetItem"> | Date | string
   budget?: Prisma.XOR<Prisma.BudgetScalarRelationFilter, Prisma.BudgetWhereInput>
+  purchaseRequestItems?: Prisma.PurchaseRequestItemListRelationFilter
 }
 
 export type BudgetItemOrderByWithRelationInput = {
@@ -319,6 +320,7 @@ export type BudgetItemOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   budget?: Prisma.BudgetOrderByWithRelationInput
+  purchaseRequestItems?: Prisma.PurchaseRequestItemOrderByRelationAggregateInput
 }
 
 export type BudgetItemWhereUniqueInput = Prisma.AtLeast<{
@@ -340,6 +342,7 @@ export type BudgetItemWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"BudgetItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BudgetItem"> | Date | string
   budget?: Prisma.XOR<Prisma.BudgetScalarRelationFilter, Prisma.BudgetWhereInput>
+  purchaseRequestItems?: Prisma.PurchaseRequestItemListRelationFilter
 }, "id">
 
 export type BudgetItemOrderByWithAggregationInput = {
@@ -399,6 +402,7 @@ export type BudgetItemCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   budget: Prisma.BudgetCreateNestedOneWithoutItemsInput
+  purchaseRequestItems?: Prisma.PurchaseRequestItemCreateNestedManyWithoutBudgetItemInput
 }
 
 export type BudgetItemUncheckedCreateInput = {
@@ -416,6 +420,7 @@ export type BudgetItemUncheckedCreateInput = {
   budgetId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedCreateNestedManyWithoutBudgetItemInput
 }
 
 export type BudgetItemUpdateInput = {
@@ -433,6 +438,7 @@ export type BudgetItemUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   budget?: Prisma.BudgetUpdateOneRequiredWithoutItemsNestedInput
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUpdateManyWithoutBudgetItemNestedInput
 }
 
 export type BudgetItemUncheckedUpdateInput = {
@@ -450,6 +456,7 @@ export type BudgetItemUncheckedUpdateInput = {
   budgetId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedUpdateManyWithoutBudgetItemNestedInput
 }
 
 export type BudgetItemCreateManyInput = {
@@ -577,6 +584,11 @@ export type BudgetItemSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
 }
 
+export type BudgetItemScalarRelationFilter = {
+  is?: Prisma.BudgetItemWhereInput
+  isNot?: Prisma.BudgetItemWhereInput
+}
+
 export type BudgetItemCreateNestedManyWithoutBudgetInput = {
   create?: Prisma.XOR<Prisma.BudgetItemCreateWithoutBudgetInput, Prisma.BudgetItemUncheckedCreateWithoutBudgetInput> | Prisma.BudgetItemCreateWithoutBudgetInput[] | Prisma.BudgetItemUncheckedCreateWithoutBudgetInput[]
   connectOrCreate?: Prisma.BudgetItemCreateOrConnectWithoutBudgetInput | Prisma.BudgetItemCreateOrConnectWithoutBudgetInput[]
@@ -619,6 +631,20 @@ export type BudgetItemUncheckedUpdateManyWithoutBudgetNestedInput = {
   deleteMany?: Prisma.BudgetItemScalarWhereInput | Prisma.BudgetItemScalarWhereInput[]
 }
 
+export type BudgetItemCreateNestedOneWithoutPurchaseRequestItemsInput = {
+  create?: Prisma.XOR<Prisma.BudgetItemCreateWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUncheckedCreateWithoutPurchaseRequestItemsInput>
+  connectOrCreate?: Prisma.BudgetItemCreateOrConnectWithoutPurchaseRequestItemsInput
+  connect?: Prisma.BudgetItemWhereUniqueInput
+}
+
+export type BudgetItemUpdateOneRequiredWithoutPurchaseRequestItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.BudgetItemCreateWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUncheckedCreateWithoutPurchaseRequestItemsInput>
+  connectOrCreate?: Prisma.BudgetItemCreateOrConnectWithoutPurchaseRequestItemsInput
+  upsert?: Prisma.BudgetItemUpsertWithoutPurchaseRequestItemsInput
+  connect?: Prisma.BudgetItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BudgetItemUpdateToOneWithWhereWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUpdateWithoutPurchaseRequestItemsInput>, Prisma.BudgetItemUncheckedUpdateWithoutPurchaseRequestItemsInput>
+}
+
 export type BudgetItemCreateWithoutBudgetInput = {
   id?: string
   description: string
@@ -633,6 +659,7 @@ export type BudgetItemCreateWithoutBudgetInput = {
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemCreateNestedManyWithoutBudgetItemInput
 }
 
 export type BudgetItemUncheckedCreateWithoutBudgetInput = {
@@ -649,6 +676,7 @@ export type BudgetItemUncheckedCreateWithoutBudgetInput = {
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedCreateNestedManyWithoutBudgetItemInput
 }
 
 export type BudgetItemCreateOrConnectWithoutBudgetInput = {
@@ -697,6 +725,90 @@ export type BudgetItemScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"BudgetItem"> | Date | string
 }
 
+export type BudgetItemCreateWithoutPurchaseRequestItemsInput = {
+  id?: string
+  description: string
+  unit: string
+  quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  meta?: string | null
+  submeta?: string | null
+  category?: string | null
+  notes?: string | null
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  budget: Prisma.BudgetCreateNestedOneWithoutItemsInput
+}
+
+export type BudgetItemUncheckedCreateWithoutPurchaseRequestItemsInput = {
+  id?: string
+  description: string
+  unit: string
+  quantity: runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  meta?: string | null
+  submeta?: string | null
+  category?: string | null
+  notes?: string | null
+  sortOrder?: number
+  budgetId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BudgetItemCreateOrConnectWithoutPurchaseRequestItemsInput = {
+  where: Prisma.BudgetItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.BudgetItemCreateWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUncheckedCreateWithoutPurchaseRequestItemsInput>
+}
+
+export type BudgetItemUpsertWithoutPurchaseRequestItemsInput = {
+  update: Prisma.XOR<Prisma.BudgetItemUpdateWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUncheckedUpdateWithoutPurchaseRequestItemsInput>
+  create: Prisma.XOR<Prisma.BudgetItemCreateWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUncheckedCreateWithoutPurchaseRequestItemsInput>
+  where?: Prisma.BudgetItemWhereInput
+}
+
+export type BudgetItemUpdateToOneWithWhereWithoutPurchaseRequestItemsInput = {
+  where?: Prisma.BudgetItemWhereInput
+  data: Prisma.XOR<Prisma.BudgetItemUpdateWithoutPurchaseRequestItemsInput, Prisma.BudgetItemUncheckedUpdateWithoutPurchaseRequestItemsInput>
+}
+
+export type BudgetItemUpdateWithoutPurchaseRequestItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  meta?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submeta?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  budget?: Prisma.BudgetUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type BudgetItemUncheckedUpdateWithoutPurchaseRequestItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  meta?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submeta?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  budgetId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type BudgetItemCreateManyBudgetInput = {
   id?: string
   description: string
@@ -727,6 +839,7 @@ export type BudgetItemUpdateWithoutBudgetInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUpdateManyWithoutBudgetItemNestedInput
 }
 
 export type BudgetItemUncheckedUpdateWithoutBudgetInput = {
@@ -743,6 +856,7 @@ export type BudgetItemUncheckedUpdateWithoutBudgetInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchaseRequestItems?: Prisma.PurchaseRequestItemUncheckedUpdateManyWithoutBudgetItemNestedInput
 }
 
 export type BudgetItemUncheckedUpdateManyWithoutBudgetInput = {
@@ -762,6 +876,35 @@ export type BudgetItemUncheckedUpdateManyWithoutBudgetInput = {
 }
 
 
+/**
+ * Count Type BudgetItemCountOutputType
+ */
+
+export type BudgetItemCountOutputType = {
+  purchaseRequestItems: number
+}
+
+export type BudgetItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  purchaseRequestItems?: boolean | BudgetItemCountOutputTypeCountPurchaseRequestItemsArgs
+}
+
+/**
+ * BudgetItemCountOutputType without action
+ */
+export type BudgetItemCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BudgetItemCountOutputType
+   */
+  select?: Prisma.BudgetItemCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * BudgetItemCountOutputType without action
+ */
+export type BudgetItemCountOutputTypeCountPurchaseRequestItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseRequestItemWhereInput
+}
+
 
 export type BudgetItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -779,6 +922,8 @@ export type BudgetItemSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   updatedAt?: boolean
   budget?: boolean | Prisma.BudgetDefaultArgs<ExtArgs>
+  purchaseRequestItems?: boolean | Prisma.BudgetItem$purchaseRequestItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.BudgetItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["budgetItem"]>
 
 export type BudgetItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -837,6 +982,8 @@ export type BudgetItemSelectScalar = {
 export type BudgetItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "unit" | "quantity" | "unitPrice" | "totalPrice" | "meta" | "submeta" | "category" | "notes" | "sortOrder" | "budgetId" | "createdAt" | "updatedAt", ExtArgs["result"]["budgetItem"]>
 export type BudgetItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   budget?: boolean | Prisma.BudgetDefaultArgs<ExtArgs>
+  purchaseRequestItems?: boolean | Prisma.BudgetItem$purchaseRequestItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.BudgetItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BudgetItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   budget?: boolean | Prisma.BudgetDefaultArgs<ExtArgs>
@@ -849,6 +996,7 @@ export type $BudgetItemPayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "BudgetItem"
   objects: {
     budget: Prisma.$BudgetPayload<ExtArgs>
+    purchaseRequestItems: Prisma.$PurchaseRequestItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1260,6 +1408,7 @@ readonly fields: BudgetItemFieldRefs;
 export interface Prisma__BudgetItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   budget<T extends Prisma.BudgetDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BudgetDefaultArgs<ExtArgs>>): Prisma.Prisma__BudgetClient<runtime.Types.Result.GetResult<Prisma.$BudgetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  purchaseRequestItems<T extends Prisma.BudgetItem$purchaseRequestItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BudgetItem$purchaseRequestItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseRequestItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1701,6 +1850,30 @@ export type BudgetItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many BudgetItems to delete.
    */
   limit?: number
+}
+
+/**
+ * BudgetItem.purchaseRequestItems
+ */
+export type BudgetItem$purchaseRequestItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseRequestItem
+   */
+  select?: Prisma.PurchaseRequestItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseRequestItem
+   */
+  omit?: Prisma.PurchaseRequestItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseRequestItemInclude<ExtArgs> | null
+  where?: Prisma.PurchaseRequestItemWhereInput
+  orderBy?: Prisma.PurchaseRequestItemOrderByWithRelationInput | Prisma.PurchaseRequestItemOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseRequestItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseRequestItemScalarFieldEnum | Prisma.PurchaseRequestItemScalarFieldEnum[]
 }
 
 /**

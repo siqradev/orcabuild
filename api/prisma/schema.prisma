@@ -17,6 +17,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt      @map("updated_at")
   projects  Project[]
+  purchaseRequests PurchaseRequest[] @relation("PurchaseRequests")
   @@map("users")
 }
 
@@ -69,7 +70,9 @@ model Budget {
   companyLogoUrl  String?  @map("company_logo_url") @db.Text
   engineerName    String?  @map("engineer_name")    @db.VarChar(150)
   engineerCrea    String?  @map("engineer_crea")    @db.VarChar(30)
+  purchaseRequests PurchaseRequest[]
   @@map("budgets")
+  
 }
 
 enum BudgetStatus {
@@ -96,5 +99,122 @@ model BudgetItem {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt      @map("updated_at")
   budget      Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  purchaseRequestItems PurchaseRequestItem[]
   @@map("budget_items")
+  
+}
+// ─── Cotação de Compra ────────────────────────────────────────────────────────
+
+model PurchaseRequest {
+  id          String                @id @default(uuid()) @db.Uuid
+  budgetId    String                @map("budget_id") @db.Uuid
+  title       String                @db.VarChar(200)
+  status      PurchaseRequestStatus @default(DRAFT)
+  createdById String                @map("created_by_id") @db.Uuid
+  createdAt   DateTime              @default(now()) @map("created_at")
+  updatedAt   DateTime              @updatedAt @map("updated_at")
+
+  budget  Budget                 @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  creator User                   @relation("PurchaseRequests", fields: [createdById], references: [id])
+  items   PurchaseRequestItem[]
+  quotes  SupplierQuote[]
+  orders  PurchaseOrder[]
+
+  @@map("purchase_requests")
+}
+
+enum PurchaseRequestStatus {
+  DRAFT     // montando a lista
+  SENT      // enviada para fornecedores cotarem
+  QUOTED    // cotações recebidas
+  APPROVED  // vencedores escolhidos
+  ORDERED   // pedidos de compra emitidos
+}
+
+model PurchaseRequestItem {
+  id                String   @id @default(uuid()) @db.Uuid
+  purchaseRequestId String   @map("purchase_request_id") @db.Uuid
+  budgetItemId      String   @map("budget_item_id") @db.Uuid
+  description       String   @db.VarChar(300)
+  unit              String   @db.VarChar(20)
+  quantityRequested Decimal  @map("quantity_requested") @db.Decimal(10, 3)
+  quantityOrdered   Decimal  @default(0) @map("quantity_ordered") @db.Decimal(10, 3)
+  budgetUnitPrice   Decimal  @map("budget_unit_price") @db.Decimal(15, 2)
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  purchaseRequest PurchaseRequest      @relation(fields: [purchaseRequestId], references: [id], onDelete: Cascade)
+  budgetItem      BudgetItem           @relation(fields: [budgetItemId], references: [id])
+  quoteItems      SupplierQuoteItem[]
+  orderItems      PurchaseOrderItem[]
+
+  @@map("purchase_request_items")
+}
+
+model SupplierQuote {
+  id                String    @id @default(uuid()) @db.Uuid
+  purchaseRequestId String    @map("purchase_request_id") @db.Uuid
+  supplierName      String    @map("supplier_name") @db.VarChar(200)
+  supplierContact   String?   @map("supplier_contact") @db.VarChar(200)
+  validUntil        DateTime  @map("valid_until")
+  notes             String?   @db.Text
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  purchaseRequest PurchaseRequest     @relation(fields: [purchaseRequestId], references: [id], onDelete: Cascade)
+  items           SupplierQuoteItem[]
+  orders          PurchaseOrder[]
+
+  @@map("supplier_quotes")
+}
+
+model SupplierQuoteItem {
+  id                    String   @id @default(uuid()) @db.Uuid
+  supplierQuoteId       String   @map("supplier_quote_id") @db.Uuid
+  purchaseRequestItemId String   @map("purchase_request_item_id") @db.Uuid
+  unitPrice             Decimal  @map("unit_price") @db.Decimal(15, 4)
+  notes                 String?  @db.Text
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  supplierQuote       SupplierQuote       @relation(fields: [supplierQuoteId], references: [id], onDelete: Cascade)
+  purchaseRequestItem PurchaseRequestItem @relation(fields: [purchaseRequestItemId], references: [id], onDelete: Cascade)
+
+  @@unique([supplierQuoteId, purchaseRequestItemId])
+  @@map("supplier_quote_items")
+}
+
+model PurchaseOrder {
+  id                String    @id @default(uuid()) @db.Uuid
+  purchaseRequestId String    @map("purchase_request_id") @db.Uuid
+  supplierQuoteId   String    @map("supplier_quote_id") @db.Uuid
+  supplierName      String    @map("supplier_name") @db.VarChar(200)
+  totalAmount       Decimal   @default(0) @map("total_amount") @db.Decimal(15, 2)
+  status            PurchaseOrderStatus @default(PENDING)
+  issuedAt          DateTime  @default(now()) @map("issued_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  purchaseRequest PurchaseRequest     @relation(fields: [purchaseRequestId], references: [id])
+  supplierQuote   SupplierQuote       @relation(fields: [supplierQuoteId], references: [id])
+  items           PurchaseOrderItem[]
+
+  @@map("purchase_orders")
+}
+
+enum PurchaseOrderStatus {
+  PENDING    // emitido, aguardando entrega
+  PARTIAL    // entregue parcialmente
+  DELIVERED  // entregue completamente
+  CANCELLED  // cancelado
+}
+
+model PurchaseOrderItem {
+  id                    String   @id @default(uuid()) @db.Uuid
+  purchaseOrderId       String   @map("purchase_order_id") @db.Uuid
+  purchaseRequestItemId String   @map("purchase_request_item_id") @db.Uuid
+  quantity              Decimal  @db.Decimal(10, 3)
+  unitPrice             Decimal  @map("unit_price") @db.Decimal(15, 4)
+  totalPrice            Decimal  @map("total_price") @db.Decimal(15, 2)
+
+  purchaseOrder       PurchaseOrder       @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  purchaseRequestItem PurchaseRequestItem @relation(fields: [purchaseRequestItemId], references: [id])
+
+  @@map("purchase_order_items")
 }

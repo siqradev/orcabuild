@@ -61,3 +61,33 @@ export type Budget = Prisma.BudgetModel
  * 
  */
 export type BudgetItem = Prisma.BudgetItemModel
+/**
+ * Model PurchaseRequest
+ * 
+ */
+export type PurchaseRequest = Prisma.PurchaseRequestModel
+/**
+ * Model PurchaseRequestItem
+ * 
+ */
+export type PurchaseRequestItem = Prisma.PurchaseRequestItemModel
+/**
+ * Model SupplierQuote
+ * 
+ */
+export type SupplierQuote = Prisma.SupplierQuoteModel
+/**
+ * Model SupplierQuoteItem
+ * 
+ */
+export type SupplierQuoteItem = Prisma.SupplierQuoteItemModel
+/**
+ * Model PurchaseOrder
+ * 
+ */
+export type PurchaseOrder = Prisma.PurchaseOrderModel
+/**
+ * Model PurchaseOrderItem
+ * 
+ */
+export type PurchaseOrderItem = Prisma.PurchaseOrderItemModel

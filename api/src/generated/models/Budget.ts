@@ -326,6 +326,7 @@ export type BudgetWhereInput = {
   engineerCrea?: Prisma.StringNullableFilter<"Budget"> | string | null
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   items?: Prisma.BudgetItemListRelationFilter
+  purchaseRequests?: Prisma.PurchaseRequestListRelationFilter
 }
 
 export type BudgetOrderByWithRelationInput = {
@@ -349,6 +350,7 @@ export type BudgetOrderByWithRelationInput = {
   engineerCrea?: Prisma.SortOrderInput | Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   items?: Prisma.BudgetItemOrderByRelationAggregateInput
+  purchaseRequests?: Prisma.PurchaseRequestOrderByRelationAggregateInput
 }
 
 export type BudgetWhereUniqueInput = Prisma.AtLeast<{
@@ -375,6 +377,7 @@ export type BudgetWhereUniqueInput = Prisma.AtLeast<{
   engineerCrea?: Prisma.StringNullableFilter<"Budget"> | string | null
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   items?: Prisma.BudgetItemListRelationFilter
+  purchaseRequests?: Prisma.PurchaseRequestListRelationFilter
 }, "id">
 
 export type BudgetOrderByWithAggregationInput = {
@@ -447,6 +450,7 @@ export type BudgetCreateInput = {
   engineerCrea?: string | null
   project: Prisma.ProjectCreateNestedOneWithoutBudgetsInput
   items?: Prisma.BudgetItemCreateNestedManyWithoutBudgetInput
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBudgetInput
 }
 
 export type BudgetUncheckedCreateInput = {
@@ -469,6 +473,7 @@ export type BudgetUncheckedCreateInput = {
   engineerName?: string | null
   engineerCrea?: string | null
   items?: Prisma.BudgetItemUncheckedCreateNestedManyWithoutBudgetInput
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBudgetInput
 }
 
 export type BudgetUpdateInput = {
@@ -491,6 +496,7 @@ export type BudgetUpdateInput = {
   engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutBudgetsNestedInput
   items?: Prisma.BudgetItemUpdateManyWithoutBudgetNestedInput
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBudgetNestedInput
 }
 
 export type BudgetUncheckedUpdateInput = {
@@ -513,6 +519,7 @@ export type BudgetUncheckedUpdateInput = {
   engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   items?: Prisma.BudgetItemUncheckedUpdateManyWithoutBudgetNestedInput
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBudgetNestedInput
 }
 
 export type BudgetCreateManyInput = {
@@ -741,6 +748,20 @@ export type BudgetUpdateOneRequiredWithoutItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BudgetUpdateToOneWithWhereWithoutItemsInput, Prisma.BudgetUpdateWithoutItemsInput>, Prisma.BudgetUncheckedUpdateWithoutItemsInput>
 }
 
+export type BudgetCreateNestedOneWithoutPurchaseRequestsInput = {
+  create?: Prisma.XOR<Prisma.BudgetCreateWithoutPurchaseRequestsInput, Prisma.BudgetUncheckedCreateWithoutPurchaseRequestsInput>
+  connectOrCreate?: Prisma.BudgetCreateOrConnectWithoutPurchaseRequestsInput
+  connect?: Prisma.BudgetWhereUniqueInput
+}
+
+export type BudgetUpdateOneRequiredWithoutPurchaseRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.BudgetCreateWithoutPurchaseRequestsInput, Prisma.BudgetUncheckedCreateWithoutPurchaseRequestsInput>
+  connectOrCreate?: Prisma.BudgetCreateOrConnectWithoutPurchaseRequestsInput
+  upsert?: Prisma.BudgetUpsertWithoutPurchaseRequestsInput
+  connect?: Prisma.BudgetWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BudgetUpdateToOneWithWhereWithoutPurchaseRequestsInput, Prisma.BudgetUpdateWithoutPurchaseRequestsInput>, Prisma.BudgetUncheckedUpdateWithoutPurchaseRequestsInput>
+}
+
 export type BudgetCreateWithoutProjectInput = {
   id?: string
   title: string
@@ -760,6 +781,7 @@ export type BudgetCreateWithoutProjectInput = {
   engineerName?: string | null
   engineerCrea?: string | null
   items?: Prisma.BudgetItemCreateNestedManyWithoutBudgetInput
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBudgetInput
 }
 
 export type BudgetUncheckedCreateWithoutProjectInput = {
@@ -781,6 +803,7 @@ export type BudgetUncheckedCreateWithoutProjectInput = {
   engineerName?: string | null
   engineerCrea?: string | null
   items?: Prisma.BudgetItemUncheckedCreateNestedManyWithoutBudgetInput
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBudgetInput
 }
 
 export type BudgetCreateOrConnectWithoutProjectInput = {
@@ -852,6 +875,7 @@ export type BudgetCreateWithoutItemsInput = {
   engineerName?: string | null
   engineerCrea?: string | null
   project: Prisma.ProjectCreateNestedOneWithoutBudgetsInput
+  purchaseRequests?: Prisma.PurchaseRequestCreateNestedManyWithoutBudgetInput
 }
 
 export type BudgetUncheckedCreateWithoutItemsInput = {
@@ -873,6 +897,7 @@ export type BudgetUncheckedCreateWithoutItemsInput = {
   companyLogoUrl?: string | null
   engineerName?: string | null
   engineerCrea?: string | null
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedCreateNestedManyWithoutBudgetInput
 }
 
 export type BudgetCreateOrConnectWithoutItemsInput = {
@@ -910,6 +935,7 @@ export type BudgetUpdateWithoutItemsInput = {
   engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   project?: Prisma.ProjectUpdateOneRequiredWithoutBudgetsNestedInput
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBudgetNestedInput
 }
 
 export type BudgetUncheckedUpdateWithoutItemsInput = {
@@ -931,6 +957,111 @@ export type BudgetUncheckedUpdateWithoutItemsInput = {
   companyLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBudgetNestedInput
+}
+
+export type BudgetCreateWithoutPurchaseRequestsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status?: $Enums.BudgetStatus
+  version?: number
+  totalCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  companyName?: string | null
+  companyCnpj?: string | null
+  companyAddress?: string | null
+  companyPhone?: string | null
+  companyEmail?: string | null
+  companyLogoUrl?: string | null
+  engineerName?: string | null
+  engineerCrea?: string | null
+  project: Prisma.ProjectCreateNestedOneWithoutBudgetsInput
+  items?: Prisma.BudgetItemCreateNestedManyWithoutBudgetInput
+}
+
+export type BudgetUncheckedCreateWithoutPurchaseRequestsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status?: $Enums.BudgetStatus
+  version?: number
+  totalCost?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  projectId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  companyName?: string | null
+  companyCnpj?: string | null
+  companyAddress?: string | null
+  companyPhone?: string | null
+  companyEmail?: string | null
+  companyLogoUrl?: string | null
+  engineerName?: string | null
+  engineerCrea?: string | null
+  items?: Prisma.BudgetItemUncheckedCreateNestedManyWithoutBudgetInput
+}
+
+export type BudgetCreateOrConnectWithoutPurchaseRequestsInput = {
+  where: Prisma.BudgetWhereUniqueInput
+  create: Prisma.XOR<Prisma.BudgetCreateWithoutPurchaseRequestsInput, Prisma.BudgetUncheckedCreateWithoutPurchaseRequestsInput>
+}
+
+export type BudgetUpsertWithoutPurchaseRequestsInput = {
+  update: Prisma.XOR<Prisma.BudgetUpdateWithoutPurchaseRequestsInput, Prisma.BudgetUncheckedUpdateWithoutPurchaseRequestsInput>
+  create: Prisma.XOR<Prisma.BudgetCreateWithoutPurchaseRequestsInput, Prisma.BudgetUncheckedCreateWithoutPurchaseRequestsInput>
+  where?: Prisma.BudgetWhereInput
+}
+
+export type BudgetUpdateToOneWithWhereWithoutPurchaseRequestsInput = {
+  where?: Prisma.BudgetWhereInput
+  data: Prisma.XOR<Prisma.BudgetUpdateWithoutPurchaseRequestsInput, Prisma.BudgetUncheckedUpdateWithoutPurchaseRequestsInput>
+}
+
+export type BudgetUpdateWithoutPurchaseRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBudgetStatusFieldUpdateOperationsInput | $Enums.BudgetStatus
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  project?: Prisma.ProjectUpdateOneRequiredWithoutBudgetsNestedInput
+  items?: Prisma.BudgetItemUpdateManyWithoutBudgetNestedInput
+}
+
+export type BudgetUncheckedUpdateWithoutPurchaseRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBudgetStatusFieldUpdateOperationsInput | $Enums.BudgetStatus
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyCnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  items?: Prisma.BudgetItemUncheckedUpdateManyWithoutBudgetNestedInput
 }
 
 export type BudgetCreateManyProjectInput = {
@@ -972,6 +1103,7 @@ export type BudgetUpdateWithoutProjectInput = {
   engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   items?: Prisma.BudgetItemUpdateManyWithoutBudgetNestedInput
+  purchaseRequests?: Prisma.PurchaseRequestUpdateManyWithoutBudgetNestedInput
 }
 
 export type BudgetUncheckedUpdateWithoutProjectInput = {
@@ -993,6 +1125,7 @@ export type BudgetUncheckedUpdateWithoutProjectInput = {
   engineerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   engineerCrea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   items?: Prisma.BudgetItemUncheckedUpdateManyWithoutBudgetNestedInput
+  purchaseRequests?: Prisma.PurchaseRequestUncheckedUpdateManyWithoutBudgetNestedInput
 }
 
 export type BudgetUncheckedUpdateManyWithoutProjectInput = {
@@ -1022,10 +1155,12 @@ export type BudgetUncheckedUpdateManyWithoutProjectInput = {
 
 export type BudgetCountOutputType = {
   items: number
+  purchaseRequests: number
 }
 
 export type BudgetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | BudgetCountOutputTypeCountItemsArgs
+  purchaseRequests?: boolean | BudgetCountOutputTypeCountPurchaseRequestsArgs
 }
 
 /**
@@ -1043,6 +1178,13 @@ export type BudgetCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  */
 export type BudgetCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BudgetItemWhereInput
+}
+
+/**
+ * BudgetCountOutputType without action
+ */
+export type BudgetCountOutputTypeCountPurchaseRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseRequestWhereInput
 }
 
 
@@ -1067,6 +1209,7 @@ export type BudgetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   engineerCrea?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Budget$itemsArgs<ExtArgs>
+  purchaseRequests?: boolean | Prisma.Budget$purchaseRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.BudgetCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["budget"]>
 
@@ -1139,6 +1282,7 @@ export type BudgetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type BudgetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Budget$itemsArgs<ExtArgs>
+  purchaseRequests?: boolean | Prisma.Budget$purchaseRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.BudgetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BudgetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1153,6 +1297,7 @@ export type $BudgetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
     items: Prisma.$BudgetItemPayload<ExtArgs>[]
+    purchaseRequests: Prisma.$PurchaseRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1569,6 +1714,7 @@ export interface Prisma__BudgetClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Budget$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Budget$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BudgetItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseRequests<T extends Prisma.Budget$purchaseRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Budget$purchaseRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2038,6 +2184,30 @@ export type Budget$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.BudgetItemScalarFieldEnum | Prisma.BudgetItemScalarFieldEnum[]
+}
+
+/**
+ * Budget.purchaseRequests
+ */
+export type Budget$purchaseRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseRequest
+   */
+  select?: Prisma.PurchaseRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseRequest
+   */
+  omit?: Prisma.PurchaseRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseRequestInclude<ExtArgs> | null
+  where?: Prisma.PurchaseRequestWhereInput
+  orderBy?: Prisma.PurchaseRequestOrderByWithRelationInput | Prisma.PurchaseRequestOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseRequestScalarFieldEnum | Prisma.PurchaseRequestScalarFieldEnum[]
 }
 
 /**

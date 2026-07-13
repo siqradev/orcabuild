@@ -844,7 +844,7 @@ export default function OrcamentoEditorPage() {
         </div>
       )}
 
-      {/* Modal Adicionar Item — com abas */}
+      {/* Modal Adicionar Item — busca unificada */}
       {searchOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 p-4">
           <div className="w-full max-w-2xl rounded-xl border border-border bg-white dark:bg-zinc-900 shadow-2xl flex flex-col max-h-[90vh]">
@@ -855,29 +855,9 @@ export default function OrcamentoEditorPage() {
               </button>
             </div>
 
-            {/* Abas */}
-            <div className="flex border-b border-border flex-shrink-0">
-              {tabs.map(tab => {
-                const Icon = tab.icon
-                return (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[13px] font-medium border-b-2 transition-colors ${
-                      activeTab === tab.key
-                        ? 'border-emerald-600 text-emerald-700'
-                        : 'border-transparent text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <Icon size={14} /> {tab.label}
-                  </button>
-                )
-              })}
-            </div>
-
             <div className="p-4 space-y-3 overflow-y-auto flex-1">
 
-              {/* Meta/Submeta — compartilhado entre todas as abas */}
+              {/* Meta/Submeta */}
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[11px] text-muted-foreground block mb-1">Meta (opcional)</label>
@@ -929,224 +909,229 @@ export default function OrcamentoEditorPage() {
 
               <div className="border-t border-border/50 pt-3" />
 
-              {/* ── ABA CATÁLOGO ── */}
-              {activeTab === 'catalogo' && (
-                <>
-                  <select value={tableId} onChange={e => setTableId(e.target.value)}
-                    className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-2 text-[13px] outline-none focus:border-emerald-600 transition-colors">
-                    <option value="">Selecione a tabela de preços</option>
-                    {tables?.map(t => <option key={t.id} value={t.id}>{t.source} — {t.reference} ({t.type}) {t.state}</option>)}
-                  </select>
-                  <div className="flex items-center gap-2 rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-2 focus-within:border-emerald-600 transition-colors">
-                    <Search size={14} className="text-muted-foreground flex-shrink-0" />
-                    <input value={searchQ} onChange={e => { setSearchQ(e.target.value); setSelectedItem(null) }}
-                      placeholder="Buscar por código ou descrição…"
-                      className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
-                      disabled={!tableId} autoFocus />
-                    {catalogLoading && <Loader2 size={14} className="animate-spin text-muted-foreground" />}
-                  </div>
-                  {catalogData?.items && catalogData.items.length > 0 && (
-                    <div className="rounded-md border border-border overflow-hidden max-h-52 overflow-y-auto">
-                      {catalogData.items.map(item => (
-                        <button key={item.id} onClick={() => setSelectedItem(item)}
-                          className={`w-full text-left px-3 py-2.5 border-b border-border/30 last:border-0 transition-colors ${selectedItem?.id === item.id ? 'bg-muted border-l-2 border-l-emerald-600' : 'hover:bg-muted/50'}`}>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] text-emerald-600 flex-shrink-0">{item.code}</span>
-                            <span className="text-[12px] text-foreground truncate flex-1">{item.description}</span>
-                            <span className="text-[11px] text-muted-foreground flex-shrink-0">{item.unit}</span>
-                            <span className="text-[12px] font-mono font-semibold text-foreground flex-shrink-0">{formatBRL(item.basePrice)}</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {searchQ.length >= 2 && tableId && !catalogLoading && catalogData?.items.length === 0 && (
-                    <p className="text-center text-[13px] text-muted-foreground py-4">Nenhum item encontrado</p>
-                  )}
-                  {selectedItem && (
-                    <div className="rounded-md border border-border bg-muted/30 p-3 space-y-3">
-                      <div>
-                        <p className="text-[11px] text-muted-foreground mb-0.5">Item selecionado</p>
-                        <p className="text-[13px] font-medium text-foreground">{selectedItem.description}</p>
-                        <p className="text-[12px] text-muted-foreground font-mono mt-0.5">{selectedItem.code} · {selectedItem.unit} · {formatBRL(selectedItem.basePrice)}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1">
-                          <label className="text-[11px] text-muted-foreground block mb-1">Quantidade</label>
-                          <input type="number" min="0.001" step="0.001" value={qty} onChange={e => setQty(parseFloat(e.target.value) || 1)}
-                            className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] font-mono outline-none focus:border-emerald-600" />
+              {/* Tabela de preços */}
+              <select value={tableId} onChange={e => setTableId(e.target.value)}
+                className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-2 text-[13px] outline-none focus:border-emerald-600 transition-colors">
+                <option value="">Selecione a tabela de preços</option>
+                {tables?.map(t => <option key={t.id} value={t.id}>{t.source} — {t.reference} {t.type ? `(${t.type})` : ''} {t.state}</option>)}
+              </select>
+
+              {/* Busca unificada */}
+              <div className="flex items-center gap-2 rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-2 focus-within:border-emerald-600 transition-colors">
+                <Search size={14} className="text-muted-foreground flex-shrink-0" />
+                <input value={searchQ} onChange={e => { setSearchQ(e.target.value); setSelectedItem(null) }}
+                  placeholder="Buscar por código ou descrição em todas as tabelas…"
+                  className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
+                  disabled={!tableId} autoFocus />
+                {catalogLoading && <Loader2 size={14} className="animate-spin text-muted-foreground" />}
+              </div>
+
+              {/* Resultados */}
+              {catalogData?.items && catalogData.items.length > 0 && (
+                <div className="rounded-md border border-border overflow-hidden max-h-52 overflow-y-auto">
+                  {catalogData.items.map(item => {
+                    const isPending = !item.basePrice || parseFloat(item.basePrice) === 0
+                    const isCot = item.code.startsWith('COT')
+                    const isCp  = item.code.startsWith('CP')
+                    return (
+                      <button key={item.id} onClick={() => setSelectedItem(item)}
+                        className={`w-full text-left px-3 py-2.5 border-b border-border/30 last:border-0 transition-colors ${selectedItem?.id === item.id ? 'bg-muted border-l-2 border-l-emerald-600' : 'hover:bg-muted/50'}`}>
+                        <div className="flex items-center gap-2">
+                          <span className={`font-mono text-[11px] flex-shrink-0 ${isCot ? 'text-yellow-600' : isCp ? 'text-purple-600' : 'text-emerald-600'}`}>
+                            {item.code}
+                          </span>
+                          {(isCot || isCp) && (
+                            <span className={`text-[9px] px-1 py-0.5 rounded font-medium flex-shrink-0 ${isCot ? 'bg-yellow-100 text-yellow-700' : 'bg-purple-100 text-purple-700'}`}>
+                              {isCot ? 'COTAÇÃO' : 'COMPOSIÇÃO'}
+                            </span>
+                          )}
+                          <span className="text-[12px] text-foreground truncate flex-1">{item.description}</span>
+                          <span className="text-[11px] text-muted-foreground flex-shrink-0">{item.unit}</span>
+                          <span className={`text-[12px] font-mono font-semibold flex-shrink-0 ${isPending ? 'text-yellow-600' : 'text-foreground'}`}>
+                            {isPending ? 'Sem preço' : formatBRL(item.basePrice)}
+                          </span>
                         </div>
-                        <div className="flex-1">
-                          <p className="text-[11px] text-muted-foreground mb-1">Total estimado</p>
-                          <p className="text-[14px] font-bold text-emerald-600 font-mono">{formatBRL(parseFloat(selectedItem.basePrice) * qty)}</p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => addSinapiItem.mutate({ code: selectedItem.code, tableId, quantity: qty, meta: metaInput.trim().toUpperCase() || undefined, submeta: submetaInput.trim().toUpperCase() || undefined })}
-                        disabled={addSinapiItem.isPending}
-                        className="w-full rounded-md bg-emerald-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2">
-                        {addSinapiItem.isPending ? <><Loader2 size={14} className="animate-spin" /> Adicionando...</> : <><Plus size={14} /> Adicionar ao Orçamento</>}
                       </button>
-                    </div>
-                  )}
-                </>
+                    )
+                  })}
+                </div>
               )}
 
-              {/* ── ABA COTAÇÃO ── */}
-              {activeTab === 'cotacao' && (
-                <>
-                  <div className="rounded-md border border-blue-500/20 bg-blue-500/5 p-3 flex items-start gap-2">
-                    <Banknote size={15} className="text-blue-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-[12px] text-blue-700">
-                      Item ainda não tem preço de tabela. Ele entra no orçamento com valor R$ 0,00 e
-                      aparece na tela de <strong>Cotações</strong> para você (ou o setor de compras) registrar os fornecedores depois.
+              {/* Nenhum resultado — botões para criar */}
+              {searchQ.length >= 2 && tableId && !catalogLoading && catalogData?.items.length === 0 && (
+                <div className="rounded-md border border-border/50 bg-muted/20 p-4 space-y-3">
+                  <p className="text-[13px] text-muted-foreground text-center">
+                    Nenhum item encontrado para <strong>"{searchQ}"</strong>
+                  </p>
+                  <p className="text-[11px] text-muted-foreground text-center">
+                    Você pode criar um item pendente de cotação ou uma composição própria:
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => { setPendingDesc(searchQ); setActiveTab('cotacao') }}
+                      className="flex items-center justify-center gap-1.5 rounded-md border border-yellow-500/40 bg-yellow-500/5 px-3 py-2 text-[12px] font-medium text-yellow-700 hover:bg-yellow-500/10 transition-colors"
+                    >
+                      <Banknote size={14} /> Criar item para Cotação
+                    </button>
+                    <button
+                      onClick={() => { setPendingDesc(searchQ); setActiveTab('composicao') }}
+                      className="flex items-center justify-center gap-1.5 rounded-md border border-purple-500/40 bg-purple-500/5 px-3 py-2 text-[12px] font-medium text-purple-700 hover:bg-purple-500/10 transition-colors"
+                    >
+                      <GitBranch size={14} /> Criar Composição Própria
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Item selecionado — quantidade */}
+              {selectedItem && (
+                <div className="rounded-md border border-border bg-muted/30 p-3 space-y-3">
+                  <div>
+                    <p className="text-[11px] text-muted-foreground mb-0.5">Item selecionado</p>
+                    <p className="text-[13px] font-medium text-foreground">{selectedItem.description}</p>
+                    <p className="text-[12px] text-muted-foreground font-mono mt-0.5">
+                      {selectedItem.code} · {selectedItem.unit} ·{' '}
+                      {selectedItem.basePrice && parseFloat(selectedItem.basePrice) > 0
+                        ? formatBRL(selectedItem.basePrice)
+                        : <span className="text-yellow-600">Aguardando preço</span>}
                     </p>
                   </div>
-
-                  <div>
-                    <label className="text-[11px] text-muted-foreground block mb-1">Descrição do item</label>
-                    <input
-                      value={pendingDesc} onChange={e => setPendingDesc(e.target.value)}
-                      placeholder="Ex: Válvula de aço inox com esfera"
-                      autoFocus
-                      className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600"
-                    />
-                  </div>
-
-                  {/* Autocomplete — cotações já existentes */}
-                  {pendingDesc.trim().length >= 2 && (
-                    <div className="space-y-1.5">
-                      {quotationSearchLoading && (
-                        <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
-                          <Loader2 size={11} className="animate-spin" /> Verificando cotações existentes...
-                        </p>
-                      )}
-                      {!quotationSearchLoading && quotationMatches && quotationMatches.length > 0 && (
-                        <div className="rounded-md border border-border overflow-hidden">
-                          <p className="text-[10px] text-muted-foreground px-3 py-1.5 bg-muted/40 border-b border-border/50">
-                            Já existem pedidos parecidos — use um existente para não duplicar:
-                          </p>
-                          {quotationMatches.map(q => {
-                            const cfg = quotationStatusConfig[q.status]
-                            const best = q.quotes.length > 0 ? Math.min(...q.quotes.map(x => parseFloat(x.unitPrice))) : null
-                            return (
-                              <Link
-                                key={q.id}
-                                href={`/cotacoes/${q.id}`}
-                                target="_blank"
-                                className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border/30 last:border-0 hover:bg-muted/30 transition-colors"
-                              >
-                                <div>
-                                  <p className="text-[12px] font-medium text-foreground">{q.description}</p>
-                                  <p className="text-[11px] text-muted-foreground">
-                                    {q.quotes.length} {q.quotes.length === 1 ? 'cotação' : 'cotações'}
-                                    {best !== null && <span className="text-emerald-600 font-mono"> · {formatBRL(best)}</span>}
-                                  </p>
-                                </div>
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${cfg.class}`}>{cfg.label}</span>
-                              </Link>
-                            )
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block mb-1">Unidade</label>
-                      <input
-                        value={pendingUnit} onChange={e => setPendingUnit(e.target.value)}
-                        placeholder="UN, M, M², KG..."
-                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600 uppercase"
-                      />
-                    </div>
-                    <div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
                       <label className="text-[11px] text-muted-foreground block mb-1">Quantidade</label>
-                      <input
-                        type="number" min="0.001" step="0.001" value={pendingQty}
-                        onChange={e => setPendingQty(parseFloat(e.target.value) || 1)}
-                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] font-mono outline-none focus:border-emerald-600"
-                      />
+                      <input type="number" min="0.001" step="0.001" value={qty} onChange={e => setQty(parseFloat(e.target.value) || 1)}
+                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] font-mono outline-none focus:border-emerald-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[11px] text-muted-foreground mb-1">Total estimado</p>
+                      <p className="text-[14px] font-bold text-emerald-600 font-mono">
+                        {selectedItem.basePrice && parseFloat(selectedItem.basePrice) > 0
+                          ? formatBRL(parseFloat(selectedItem.basePrice) * qty)
+                          : <span className="text-yellow-600 text-[12px]">R$ 0,00 (sem preço)</span>}
+                      </p>
                     </div>
                   </div>
-
                   <button
-                    onClick={() => addPendingQuotation.mutate({
-                      description: pendingDesc,
-                      unit: pendingUnit.trim().toUpperCase(),
-                      quantity: pendingQty,
+                    onClick={() => addSinapiItem.mutate({
+                      code: selectedItem.code,
+                      tableId,
+                      quantity: qty,
                       meta: metaInput.trim().toUpperCase() || undefined,
                       submeta: submetaInput.trim().toUpperCase() || undefined,
                     })}
-                    disabled={!pendingDesc.trim() || !pendingUnit.trim() || addPendingQuotation.isPending}
-                    className="w-full rounded-md bg-emerald-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
-                  >
-                    {addPendingQuotation.isPending
+                    disabled={addSinapiItem.isPending}
+                    className="w-full rounded-md bg-emerald-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2">
+                    {addSinapiItem.isPending
                       ? <><Loader2 size={14} className="animate-spin" /> Adicionando...</>
-                      : <><Banknote size={14} /> Adicionar e Enviar para Cotação</>}
+                      : <><Plus size={14} /> Adicionar ao Orçamento</>}
                   </button>
-                </>
+                </div>
               )}
 
-              {/* ── ABA COMPOSIÇÃO ── */}
-              {activeTab === 'composicao' && (
-                <>
-                  <div className="rounded-md border border-purple-500/20 bg-purple-500/5 p-3 flex items-start gap-2">
-                    <GitBranch size={15} className="text-purple-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-[12px] text-purple-700">
-                      Cria um serviço próprio (ex: "Limpeza de fogão") sem precisar existir em nenhuma tabela.
-                      Ele entra no orçamento com valor R$ 0,00 — depois você monta os insumos na tela de <strong>Composições</strong>
-                      e o preço é calculado automaticamente.
-                    </p>
+              {/* Mini formulário — Criar Cotação */}
+              {activeTab === 'cotacao' && (
+                <div className="rounded-md border border-yellow-500/30 bg-yellow-500/5 p-3 space-y-3">
+                  <p className="text-[12px] font-medium text-yellow-700 flex items-center gap-1.5">
+                    <Banknote size={14} /> Criar item pendente de Cotação
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Entra no orçamento com R$0,00 e aparece na tela de Cotações para ser precificado.
+                  </p>
+                  <div>
+                    <label className="text-[11px] text-muted-foreground block mb-1">Descrição</label>
+                    <input value={pendingDesc} onChange={e => setPendingDesc(e.target.value)}
+                      placeholder="Ex: Tubo PEAD PE100 PN16 DN450"
+                      className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600" />
                   </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[11px] text-muted-foreground block mb-1">Unidade</label>
+                      <input value={pendingUnit} onChange={e => setPendingUnit(e.target.value.toUpperCase())}
+                        placeholder="M, UN, KG..."
+                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600 uppercase" />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-muted-foreground block mb-1">Quantidade</label>
+                      <input type="number" min="0.001" step="0.001" value={pendingQty}
+                        onChange={e => setPendingQty(parseFloat(e.target.value) || 1)}
+                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] font-mono outline-none focus:border-emerald-600" />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => setActiveTab('catalogo')}
+                      className="flex-1 rounded-md border border-border px-3 py-1.5 text-[12px] text-muted-foreground hover:bg-muted/50 transition-colors">
+                      Voltar
+                    </button>
+                    <button
+                      onClick={() => addPendingQuotation.mutate({
+                        description: pendingDesc,
+                        unit: pendingUnit.trim().toUpperCase(),
+                        quantity: pendingQty,
+                        meta: metaInput.trim().toUpperCase() || undefined,
+                        submeta: submetaInput.trim().toUpperCase() || undefined,
+                      })}
+                      disabled={!pendingDesc.trim() || !pendingUnit.trim() || addPendingQuotation.isPending}
+                      className="flex-1 rounded-md bg-yellow-600 px-3 py-1.5 text-[12px] font-medium text-white hover:bg-yellow-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5">
+                      {addPendingQuotation.isPending
+                        ? <><Loader2 size={13} className="animate-spin" /> Adicionando...</>
+                        : <><Banknote size={13} /> Adicionar para Cotação</>}
+                    </button>
+                  </div>
+                </div>
+              )}
 
+              {/* Mini formulário — Criar Composição */}
+              {activeTab === 'composicao' && (
+                <div className="rounded-md border border-purple-500/30 bg-purple-500/5 p-3 space-y-3">
+                  <p className="text-[12px] font-medium text-purple-700 flex items-center gap-1.5">
+                    <GitBranch size={14} /> Criar Composição Própria
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Entra no orçamento com R$0,00. Monte os insumos depois em <strong>Composições</strong>.
+                  </p>
                   <div>
                     <label className="text-[11px] text-muted-foreground block mb-1">Descrição do serviço</label>
-                    <input
-                      value={pendingDesc} onChange={e => setPendingDesc(e.target.value)}
-                      placeholder="Ex: Serviço de limpeza de fogão"
-                      autoFocus
-                      className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600"
-                    />
+                    <input value={pendingDesc} onChange={e => setPendingDesc(e.target.value)}
+                      placeholder="Ex: Instalação de tubo PVC DN100"
+                      className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600" />
                   </div>
-
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="text-[11px] text-muted-foreground block mb-1">Unidade</label>
-                      <input
-                        value={pendingUnit} onChange={e => setPendingUnit(e.target.value)}
-                        placeholder="UN, M, M², KG..."
-                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600 uppercase"
-                      />
+                      <input value={pendingUnit} onChange={e => setPendingUnit(e.target.value.toUpperCase())}
+                        placeholder="M, UN, M²..."
+                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] outline-none focus:border-emerald-600 uppercase" />
                     </div>
                     <div>
                       <label className="text-[11px] text-muted-foreground block mb-1">Quantidade</label>
-                      <input
-                        type="number" min="0.001" step="0.001" value={pendingQty}
+                      <input type="number" min="0.001" step="0.001" value={pendingQty}
                         onChange={e => setPendingQty(parseFloat(e.target.value) || 1)}
-                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] font-mono outline-none focus:border-emerald-600"
-                      />
+                        className="w-full rounded-md border border-border bg-white dark:bg-zinc-800 px-3 py-1.5 text-[13px] font-mono outline-none focus:border-emerald-600" />
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => addEmptyComposition.mutate({
-                      description: pendingDesc,
-                      unit: pendingUnit.trim().toUpperCase(),
-                      quantity: pendingQty,
-                      meta: metaInput.trim().toUpperCase() || undefined,
-                      submeta: submetaInput.trim().toUpperCase() || undefined,
-                    })}
-                    disabled={!pendingDesc.trim() || !pendingUnit.trim() || addEmptyComposition.isPending}
-                    className="w-full rounded-md bg-emerald-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
-                  >
-                    {addEmptyComposition.isPending
-                      ? <><Loader2 size={14} className="animate-spin" /> Criando...</>
-                      : <><GitBranch size={14} /> Criar Composição e Adicionar</>}
-                  </button>
-                </>
+                  <div className="flex gap-2">
+                    <button onClick={() => setActiveTab('catalogo')}
+                      className="flex-1 rounded-md border border-border px-3 py-1.5 text-[12px] text-muted-foreground hover:bg-muted/50 transition-colors">
+                      Voltar
+                    </button>
+                    <button
+                      onClick={() => addEmptyComposition.mutate({
+                        description: pendingDesc,
+                        unit: pendingUnit.trim().toUpperCase(),
+                        quantity: pendingQty,
+                        meta: metaInput.trim().toUpperCase() || undefined,
+                        submeta: submetaInput.trim().toUpperCase() || undefined,
+                      })}
+                      disabled={!pendingDesc.trim() || !pendingUnit.trim() || addEmptyComposition.isPending}
+                      className="flex-1 rounded-md bg-purple-600 px-3 py-1.5 text-[12px] font-medium text-white hover:bg-purple-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5">
+                      {addEmptyComposition.isPending
+                        ? <><Loader2 size={13} className="animate-spin" /> Criando...</>
+                        : <><GitBranch size={13} /> Criar e Adicionar</>}
+                    </button>
+                  </div>
+                </div>
               )}
+
             </div>
           </div>
         </div>

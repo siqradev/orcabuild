@@ -37,3 +37,24 @@ export const BudgetStatus = {
 } as const
 
 export type BudgetStatus = (typeof BudgetStatus)[keyof typeof BudgetStatus]
+
+
+export const PurchaseRequestStatus = {
+  DRAFT: 'DRAFT',
+  SENT: 'SENT',
+  QUOTED: 'QUOTED',
+  APPROVED: 'APPROVED',
+  ORDERED: 'ORDERED'
+} as const
+
+export type PurchaseRequestStatus = (typeof PurchaseRequestStatus)[keyof typeof PurchaseRequestStatus]
+
+
+export const PurchaseOrderStatus = {
+  PENDING: 'PENDING',
+  PARTIAL: 'PARTIAL',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PurchaseOrderStatus = (typeof PurchaseOrderStatus)[keyof typeof PurchaseOrderStatus]

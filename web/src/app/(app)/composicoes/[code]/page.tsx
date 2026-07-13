@@ -154,7 +154,7 @@ export default function ComposicaoDetailPage() {
       })
     } else {
       const unitPrice = parseFloat(manPrice)
-      if (!manDesc.trim() || !manUnit.trim() || isNaN(unitPrice) || unitPrice <= 0) {
+      if (!manDesc.trim() || !manUnit.trim() || isNaN(unitPrice) || unitPrice < 0) {
         toast.error('Preencha todos os campos do insumo manual'); return
       }
       addInsumo.mutate({
